@@ -258,3 +258,6 @@ unset (HEADERS)
 unset (SOURCE_FILES)
 unset (TARGETS)
 unset (RESOURCES)
+
+enable_testing()
+include ("${PROJECT_SOURCE_DIR}/test/njwt_tests.cmake")

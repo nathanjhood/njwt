@@ -20,3 +20,5 @@ endfunction(do_test)
 foreach(TEST IN LISTS TESTS)
     do_test("${TEST}")
 endforeach()
+
+unset (TESTS)
