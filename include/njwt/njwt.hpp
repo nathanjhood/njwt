@@ -35,7 +35,7 @@ namespace njwt {}
 // #include "njwt_cmrc.hpp"
 // #include "njwt_base64.hpp"
 
-#include "version.hpp"
+#include "njwt_version.hpp"
 
 namespace njwt {
 
