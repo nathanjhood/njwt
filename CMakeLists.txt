@@ -255,10 +255,72 @@ write_basic_package_version_file (
 	COMPATIBILITY AnyNewerVersion
 )
 
+#[===========================================================================[
+  CTest
+#]===========================================================================]
+
+enable_testing()
+include ("${PROJECT_SOURCE_DIR}/test/njwt_tests.cmake")
+
+#[===========================================================================[
+  CPack
+#]===========================================================================]
+set(CPACK_PACKAGE_CHECKSUM "${PROJECT_VERSION_TWEAK}")
+set(CPACK_PACKAGE_VENDOR "nathanjhood")
+set(CPACK_PACKAGE_NAME              "${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+set(CPACK_PACKAGE_FILE_NAME         "${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}") # Compiled binary distribution
+set(CPACK_SOURCE_PACKAGE_FILE_NAME  "${PROJECT_NAME}-${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-Source") # No system spec as this is un-compiled source file distribution
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION_TWEAK ${PROJECT_VERSION_VERSION_TWEAK})
+set(CPACK_RESOURCE_FILE_VERSION ${PROJECT_SOURCE_DIR}/VERSION)
+set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
+set(CPACK_RESOURCE_FILE_README  ${PROJECT_SOURCE_DIR}/README.md)
+set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
+set(CPACK_COMPONENT_INCLUDE_TOPLEVEL_DIRECTORY OFF)
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+set(CPACK_SOURCE_IGNORE_FILES
+    _CPack_Packages
+    /*.zip
+    /*.tar
+    /*.tar.*
+    /.env*
+    /.git/*
+    /.cmake
+    /.github
+    /.vs
+    /.vscode
+    /.cache
+    /.config
+    /.local
+    /doc
+    /docs
+    /bin
+    /lib
+    /usr
+    /out
+    /build
+    /Release
+    /Debug
+    /MinSizeRel
+    /RelWithDebInfo
+    /downloads
+    /installed
+    /node_modules
+    /vcpkg
+    /.*build.*
+    /package-lock.json
+    /yarn.lock
+    /\\\\.DS_Store
+)
+include(CPack)
+
+#[===========================================================================[
+  Exit politely.
+#]===========================================================================]
 unset (HEADERS)
 unset (SOURCE_FILES)
 unset (TARGETS)
 unset (RESOURCES)
-
-enable_testing()
-include ("${PROJECT_SOURCE_DIR}/test/njwt_tests.cmake")
