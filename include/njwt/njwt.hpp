@@ -32,8 +32,8 @@
 /** @brief the 'njwt' namespace. */
 namespace njwt {}
 
-#include "njwt_cmrc.hpp"
-#include "njwt_base64.hpp"
+// #include "njwt_cmrc.hpp"
+// #include "njwt_base64.hpp"
 
 #include "version.hpp"
 
