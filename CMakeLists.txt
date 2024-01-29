@@ -13,6 +13,8 @@ include (JoinPaths)
 include (WriteVersionFile)
 include (WriteVersionHeader)
 
+set (CMAKE_CXX_STANDARD 17)
+
 #[===========================================================================[
   Project setup
 #]===========================================================================]
