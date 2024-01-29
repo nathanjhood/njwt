@@ -1,5 +1,5 @@
 /**
- * @file njwt.hpp
+ * @file njwt.cpp
  * @author Nathan J. Hood   (nathanjhood@googlemail.com)
  * @version 0.0.0
  * @date 2023-12-29
@@ -26,19 +26,6 @@
  *
  */
 
-#ifndef NJWT_HPP_
-#define NJWT_HPP_
+#include "njwt/njwt.hpp"
 
-/** @brief the 'njwt' namespace. */
-namespace njwt {}
-
-#include "njwt_cmrc.hpp"
-#include "njwt_base64.hpp"
-
-#include "version.hpp"
-
-namespace njwt {
-
-} // namespace njwt
-
-#endif // NJWT_HPP_
+// njwt::cmrc::

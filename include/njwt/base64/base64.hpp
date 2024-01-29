@@ -1,5 +1,5 @@
 /**
- * @file base64.h
+ * @file base64.hpp
  * @author René Nyffenegger (rene.nyffenegger@adp-gmbh.ch)
  * @author Nathan J. Hood   (nathanjhood@googlemail.com)
  * @version 0.1
