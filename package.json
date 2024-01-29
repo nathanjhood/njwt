@@ -1,0 +1,61 @@
+{
+  "name": "@nathanjhood/njwt",
+  "version": "0.0.0",
+  "description": "Napi Addon for JWT's",
+  "main": "index.js",
+  "repository": "https://github.com/nathanjhood/njwt.git",
+  "author": "StoneyDSP <nathanjhood@googlemail.com>",
+  "license": "MIT",
+  "private": false,
+  "types": "./lib/addon",
+  "engines": {
+		"node": ">= 14.15.0"
+	},
+  "dependencies": {
+    "cmake-js": "^7.3.0",
+    "node-addon-api": "^6.1.0",
+    "node-api-headers": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "start":                "node ./test/index.js",
+    "test":                 "ctest -B ./build -C Release --rerun-failed --output-on-failure",
+
+    "install":              "cmake-js install",
+    "postinstall":          "cmake-js compile",
+    "configure":            "cmake-js configure",
+    "reconfigure":          "cmake-js reconfigure",
+    "build":                "cmake-js build",
+    "rebuild":              "cmake-js rebuild",
+    "clean":                "cmake-js clean",
+    "wipe":                 "cmake-js clean && rm -rvf ./node_modules",
+
+    "cmakejs:install":      "cmake-js install     --generator Ninja",
+    "cmakejs:postinstall":  "cmake-js compile     --generator Ninja",
+    "cmakejs:configure":    "cmake-js configure   --generator Ninja",
+    "cmakejs:reconfigure":  "cmake-js reconfigure --generator Ninja",
+    "cmakejs:build":        "cmake-js build       --generator Ninja",
+    "cmakejs:rebuild":      "cmake-js rebuild     --generator Ninja",
+    "cmakejs:clean":        "cmake-js clean       --generator Ninja",
+    "cmakejs:wipe":         "cmake-js clean       --generator Ninja && rm -rvf ./node_modules",
+    "cmakejs:help":         "cmake-js help",
+
+    "cmake:configure":      "cmake -S . -B ./build",
+    "cmake:reconfigure":    "cmake --fresh -S . -B ./build",
+    "cmake:build":          "cmake --build ./build",
+    "cmake:rebuild":        "cmake --fresh -S . -B ./build && cmake --build ./build",
+    "cmake:help":           "cmake --help",
+
+    "ctest":                "ctest -B ./build",
+    "ctest:help":           "ctest --help",
+
+    "cpack:all":            "cpack -B ./build --config ./build/CPackConfig.cmake",
+    "cpack:zip":            "cpack -B ./build --config ./build/CPackConfig.cmake --generator ZIP",
+    "cpack:tar":            "cpack -B ./build --config ./build/CPackConfig.cmake --generator TAR",
+    "cpack:source":         "cpack -B ./build --config ./build/CPackSourceConfig.cmake",
+    "cpack:help":           "cpack --help"
+  }
+}
