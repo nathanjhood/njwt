@@ -197,6 +197,7 @@ cmakejs_create_napi_addon (
 set_target_properties(addon
   PROPERTIES
   LIBRARY_OUTPUT_NAME njwt
+  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
 )
 
 target_link_libraries (addon PRIVATE njwt::njwt)
