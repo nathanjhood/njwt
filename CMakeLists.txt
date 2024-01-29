@@ -170,6 +170,14 @@ target_sources (njwt
 # Include our sources to be compiled
 target_sources (njwt PRIVATE ${SOURCE_FILES})
 
+set_target_properties(njwt
+  PROPERTIES
+  LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib"
+  ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib"
+  RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
+  PDB_OUTPUT_DIRECTORY     "${PROJECT_BINARY_DIR}/bin"
+)
+
 if (FALSE)
   target_link_libraries (njwt njwt::cmrc)
 endif ()
@@ -180,6 +188,16 @@ endif ()
 
 # Add the target to the list
 list (APPEND TARGETS njwt)
+
+#[===========================================================================[
+  TARGET = njwt::addon-base
+#]===========================================================================]
+
+# Alias the addon dependencies
+add_library (addon-base INTERFACE)
+add_library (njwt::addon-base ALIAS addon-base)
+target_link_libraries (addon-base INTERFACE cmake-js::cmake-js)
+list (APPEND TARGETS addon-base)
 
 #[===========================================================================[
   TARGET = njwt::addon
@@ -197,12 +215,19 @@ cmakejs_create_napi_addon (
 set_target_properties(addon
   PROPERTIES
   LIBRARY_OUTPUT_NAME njwt
-  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+  LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib"
+  ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib"
+  RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin"
+  PDB_OUTPUT_DIRECTORY     "${PROJECT_BINARY_DIR}/bin"
 )
 
-target_link_libraries (addon PRIVATE njwt::njwt)
+target_link_libraries (addon
+  PRIVATE
+  njwt::addon-base
+  njwt::njwt
+)
 
-list (APPEND TARGETS addon cmake-js-addon-base)
+list (APPEND TARGETS addon)
 
 #[===========================================================================[
   Export this configuration to share it with other CMake projects
