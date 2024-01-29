@@ -4,7 +4,7 @@
  * @version 0.0.0
  * @date 2023-12-29
  *
- * @copyright Copyright (C) 2024 Nathan J. Hood)
+ * @copyright Copyright (C) 2024 Nathan J. Hood
  *
  * This source code is provided 'as-is', without any express or implied
  * warranty. In no event will the author be held liable for any damages

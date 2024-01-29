@@ -1,4 +1,11 @@
 #[=============================================================================[
+  CMakeJS.cmake - A proposed CMake API for cmake-js v8
+  Copyright (C) 2024 Nathan J. Hood
+  MIT License
+  See: https://github.com/nathanjhood/NapiAddon
+#]=============================================================================]
+
+#[=============================================================================[
   Check whether we have already been included (borrowed from CMakeRC)
 #]=============================================================================]
 # Hypothetical CMakeJS version number...
@@ -57,11 +64,13 @@ This module defines
 
 #]=======================================================================]
 
-# CMAKE_JS_INC is defined on all platforms when calling from cmake-js.
+# CMAKE_JS_VERSION is defined on all platforms when calling from cmake-js.
 # By checking whether this var is pre-defined, we can determine if we are
 # running from an npm script (via cmake-js), or from CMake directly...
 
-if (NOT DEFINED CMAKE_JS_INC)
+# TODO: Unfortunately, this var is a little too close to 'CMAKE_VERSION'
+# for comfort... Kitware may need it. Should be moved into 'CMAKEJS_VERSION'!
+if (NOT DEFINED CMAKE_JS_VERSION)
 
     # ...and if we're calling from CMake directly, we need to set up some vars
     # that our build step depends on (these are predefined when calling via npm/cmake-js).
@@ -143,6 +152,7 @@ else ()
 
 endif ()
 
+unset(CMAKE_JS_INC_FILES) # prevent repetitive globbing on each run
 file(GLOB CMAKE_JS_INC_FILES "${CMAKE_JS_INC}/*.h")
 file(GLOB CMAKE_JS_INC_FILES "${CMAKE_JS_INC}/**/*.h")
 source_group("cmake-js v${_version} Node ${NODE_VERSION}" FILES "${CMAKE_JS_INC_FILES}")
@@ -192,7 +202,7 @@ endif()
 # Resolve NodeJS development headers
 # TODO: This code block is quite problematic, since:
 # 1 - it might trigger a build run, depending on how the builder has set up their package.json scripts...
-# 2 X it also currently assumes a preference for yarn over npm (and the others)...
+# 2 - it also currently assumes a preference for yarn over npm (and the others)...
 # 3 - finally, because of how cmake-js works, it might create Ninja-build artefacts,
 # even when the CMake user specifies a different generator to CMake manually...
 if(NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/node_modules")
@@ -220,6 +230,7 @@ function(cmakejs_acquire_napi_c_files)
     string(REGEX REPLACE "[\r\n\"]" "" NODE_API_HEADERS_DIR "${NODE_API_HEADERS_DIR}")
     set(NODE_API_HEADERS_DIR "${NODE_API_HEADERS_DIR}" CACHE PATH "Node API Headers directory." FORCE)
 
+    unset(NODE_API_INC_FILES)
     file(GLOB NODE_API_INC_FILES "${NODE_API_HEADERS_DIR}/*.h")
     set(NODE_API_INC_FILES "${NODE_API_INC_FILES}" CACHE FILEPATH "Node API Header files." FORCE)
     source_group("Node Addon API (C)" FILES "${NODE_API_INC_FILES}")
@@ -233,6 +244,11 @@ endfunction()
 if(NOT DEFINED NODE_API_HEADERS_DIR)
     cmakejs_acquire_napi_c_files()
     message(STATUS "NODE_API_HEADERS_DIR: ${NODE_API_HEADERS_DIR}")
+endif()
+if(NOT DEFINED NODE_API_INC_FILES)
+    file(GLOB NODE_API_INC_FILES "${NODE_API_HEADERS_DIR}/*.h")
+    set(NODE_API_INC_FILES "${NODE_API_INC_FILES}" CACHE FILEPATH "Node API Header files." FORCE)
+    source_group("Node Addon API (C)" FILES "${NODE_API_INC_FILES}")
 endif()
 
 #[=============================================================================[
@@ -248,6 +264,7 @@ function(cmakejs_acquire_napi_cpp_files)
     string(REGEX REPLACE "[\r\n\"]" "" NODE_ADDON_API_DIR "${NODE_ADDON_API_DIR}")
     set(NODE_ADDON_API_DIR "${NODE_ADDON_API_DIR}" CACHE PATH "Node Addon API Headers directory." FORCE)
 
+    unset(NODE_ADDON_API_INC_FILES)
     file(GLOB NODE_ADDON_API_INC_FILES "${NODE_ADDON_API_DIR}/*.h")
     set(NODE_ADDON_API_INC_FILES "${NODE_ADDON_API_INC_FILES}" CACHE FILEPATH "Node Addon API Header files." FORCE)
     source_group("Node Addon API (C++)" FILES "${NODE_ADDON_API_INC_FILES}")
@@ -262,15 +279,28 @@ if(NOT DEFINED NODE_ADDON_API_DIR)
     cmakejs_acquire_napi_cpp_files()
     message(STATUS "NODE_ADDON_API_DIR: ${NODE_ADDON_API_DIR}")
 endif()
+if(NOT DEFINED NODE_ADDON_API_INC_FILES)
+    file(GLOB NODE_ADDON_API_INC_FILES "${NODE_ADDON_API_DIR}/*.h")
+    set(NODE_ADDON_API_INC_FILES "${NODE_ADDON_API_INC_FILES}" CACHE FILEPATH "Node Addon API Header files." FORCE)
+    source_group("Node Addon API (C++)" FILES "${NODE_ADDON_API_INC_FILES}")
+endif()
 
 #[=============================================================================[
 Silently create an interface library (no output) with all Addon API dependencies
 resolved, for Addon targets to link with.
 
-(This should be expanded to contain most of cmake-js globally-required
-configuration)
+(This should contain most of cmake-js globally-required configuration)
+
+Targets:
+
+cmake-js::node-dev
+cmake-js::node-api
+cmake-js::node-addon-api
+cmake-js::cmake-js
+
 #]=============================================================================]
 
+# NodeJS system installation headers
 # cmake-js::node-dev
 add_library                 (node-dev INTERFACE)
 add_library                 (cmake-js::node-dev ALIAS node-dev)
@@ -279,23 +309,26 @@ target_sources              (node-dev INTERFACE "${CMAKE_JS_SRC}")
 target_sources              (node-dev INTERFACE "${CMAKE_JS_INC_FILES}")
 target_link_libraries       (node-dev INTERFACE "${CMAKE_JS_LIB}")
 
+# Node API (C) - requires NodeJS system installation headers
 # cmake-js::node-api
 add_library                 (node-api INTERFACE)
 add_library                 (cmake-js::node-api ALIAS node-api)
 target_include_directories  (node-api INTERFACE "${NODE_API_HEADERS_DIR}")
 target_sources              (node-api INTERFACE "${NODE_API_INC_FILES}")
+target_link_libraries       (node-api INTERFACE cmake-js::node-dev)
 
+# Node Addon API (C++) - requires Node API (C)
 # cmake-js::node-addon-api
 add_library                 (node-addon-api INTERFACE)
 add_library                 (cmake-js::node-addon-api ALIAS node-addon-api)
 target_include_directories  (node-addon-api INTERFACE "${NODE_ADDON_API_DIR}")
 target_sources              (node-addon-api INTERFACE "${NODE_ADDON_API_INC_FILES}")
+target_link_libraries       (node-addon-api INTERFACE cmake-js::node-api)
 
+# CMakeJS API - requires Node Addon API (C++), resolves the full Napi Addon dependency chain
 # cmake-js::cmake-js
 add_library                 (cmake-js INTERFACE)
 add_library                 (cmake-js::cmake-js ALIAS cmake-js)
-target_link_libraries       (cmake-js INTERFACE cmake-js::node-dev)
-target_link_libraries       (cmake-js INTERFACE cmake-js::node-api)
 target_link_libraries       (cmake-js INTERFACE cmake-js::node-addon-api)
 target_compile_definitions  (cmake-js INTERFACE "BUILDING_NODE_EXTENSION")
 target_compile_features     (cmake-js INTERFACE cxx_nullptr) # Signal a basic C++11 feature to require C++11.
