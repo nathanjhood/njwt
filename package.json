@@ -7,7 +7,7 @@
   "author": "StoneyDSP <nathanjhood@googlemail.com>",
   "license": "MIT",
   "private": false,
-  "types": "./lib/addon",
+  "types": "./lib/njwt",
   "engines": {
 		"node": ">= 14.15.0"
 	},
