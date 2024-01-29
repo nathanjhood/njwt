@@ -4,7 +4,7 @@
   "description": "Napi Addon for JWT's",
   "main": "index.js",
   "repository": "https://github.com/nathanjhood/njwt.git",
-  "author": "StoneyDSP <nathanjhood@googlemail.com>",
+  "author": "Nathan J. Hood <nathanjhood@googlemail.com>",
   "license": "MIT",
   "private": false,
   "types": "./lib/njwt",
