@@ -44,17 +44,17 @@ list (APPEND RESOURCES
   LICENSE
 )
 
-cmrc_add_resource_library (cmrc
+cmrc_add_resource_library (resources
   ${RESOURCES}
   ALIAS njwt::cmrc
 )
 
-set_target_properties (cmrc
+set_target_properties (resources
   PROPERTIES
   LIBRARY_OUTPUT_NAME njwt_cmrc
 )
 
-list (APPEND TARGETS cmrc cmrc-base)
+list (APPEND TARGETS resources cmrc-base)
 
 #[===========================================================================[
   TARGET = njwt::base64
