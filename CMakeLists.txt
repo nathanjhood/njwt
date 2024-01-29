@@ -35,7 +35,7 @@ set (TARGETS)
 #[===========================================================================[
   TARGET = njwt::cmrc
 #]===========================================================================]
-
+if (FALSE)
 message (STATUS "Configuring njwt::cmrc")
 
 list (APPEND RESOURCES
@@ -55,11 +55,13 @@ set_target_properties (resources
 )
 
 list (APPEND TARGETS resources cmrc-base)
+endif()
 
 #[===========================================================================[
   TARGET = njwt::base64
 #]===========================================================================]
 
+if (FALSE)
 message (STATUS "Configuring njwt::base64")
 
 configure_file (
@@ -103,6 +105,7 @@ set_target_properties (base64
 
 # Add the target to the list
 list (APPEND TARGETS base64)
+endif()
 
 #[===========================================================================[
   TARGET = njwt::njwt
@@ -164,7 +167,14 @@ target_sources (njwt
 
 # Include our sources to be compiled
 target_sources (njwt PRIVATE ${SOURCE_FILES})
-target_link_libraries (njwt njwt::cmrc njwt::base64)
+
+if (FALSE)
+  target_link_libraries (njwt njwt::cmrc)
+endif ()
+
+if (FALSE)
+  target_link_libraries (njwt njwt::base64)
+endif ()
 
 # Add the target to the list
 list (APPEND TARGETS njwt)

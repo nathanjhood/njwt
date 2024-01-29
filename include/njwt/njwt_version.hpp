@@ -1,4 +1,4 @@
-// njwt v0.0.0.3530c8dc52fa3be9fbe8565a707109db60b5da0e
+// njwt v0.0.0.6c8f37639b0f039580af31b7ba95c68dfdec247f
 // Version control info
 
 #ifndef NJWT_VERSION_HPP_
@@ -10,8 +10,8 @@
 #define NJWT_VERSION_MAJOR "0"
 #define NJWT_VERSION_MINOR "0"
 #define NJWT_VERSION_PATCH "0"
-#define NJWT_VERSION_TWEAK "3530c8dc52fa3be9fbe8565a707109db60b5da0e"
-#define NJWT_VERSION "0.0.0.3530c8dc52fa3be9fbe8565a707109db60b5da0e"
+#define NJWT_VERSION_TWEAK "6c8f37639b0f039580af31b7ba95c68dfdec247f"
+#define NJWT_VERSION "0.0.0.6c8f37639b0f039580af31b7ba95c68dfdec247f"
 #define NJWT_REPOSITORY "https://github.com/nathanjhood/njwt.git"
 
 #endif // NJWT_VERSION_HPP_
